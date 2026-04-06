@@ -10,6 +10,7 @@ export async function logChatMessage(chatData: {
   answer: string;
   step_id?: string;
   step_label?: string;
+  user_agent?: string;
 }) {
   if (!supabaseUrl || !supabaseAnonKey) return null;
 
