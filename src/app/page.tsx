@@ -85,8 +85,10 @@ export default function Home() {
         }),
       });
       const data = await res.json();
-      if (data.content) {
+      if (res.ok && data.content) {
         setMessages(prev => [...prev, { role: "model", content: data.content }]);
+      } else {
+        throw new Error(data.error || "API Error");
       }
     } catch (error) {
       console.error("Error:", error);
