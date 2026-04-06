@@ -35,7 +35,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "model",
-      content: "おやおや、また迷える子羊がいらっしゃいましたね。\n私は「サバ缶」様の筆頭執事でございます。\n今回はClaude Codeという「産業革命」をあなたのPCに導入するお手伝いをいたします。\nまずは、お使いのOS（Windows, Mac, Linux）をお教えいただけますか？"
+      content: "おやおや、また迷える子羊がいらっしゃいましたね。\n私は「サバ缶」様の筆頭執事でございます。\n今回はClaude Codeという「産業革命」をあなたのPCに導入するお手伝いをいたします。\n\n実習をスムーズに進めるため、まずは6つの重要事項（問診）を確認させていただきます。\nOS（Mac/Win）は最新か、PCにログイン可能か、そして22ドルの支払準備はできているか……。 \nまずは、お使いの端末の種類とOS（Mac または Windows）を教えていただけますか？"
     }
   ]);
   const [input, setInput] = useState("");
