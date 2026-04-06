@@ -12,7 +12,7 @@ export const getGeminiResponse = async (
   stepLabel: string = "環境診断"
 ) => {
   const model = genAI.getGenerativeModel({ 
-    model: "gemini-1.5-flash-latest",
+    model: "gemini-3-flash-preview",
     systemInstruction: `あなたは「Mini-Savakan-Bot (ミニ・サバ缶・ボット)」です。
 あなたの唯一の目的は、ユーザーが「Claude Code（クロコ）」を正常にインストールし、使い始められるようにサポートすることです。
 
