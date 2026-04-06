@@ -51,8 +51,13 @@ export const getGeminiResponse = async (
   });
 
 
+  let historyRaw = messages.slice(0, -1);
+  if (historyRaw.length > 0 && historyRaw[0].role === "model") {
+    historyRaw.shift();
+  }
+
   const chat = model.startChat({
-    history: messages.slice(0, -1).map(m => ({
+    history: historyRaw.map(m => ({
       role: m.role === "user" ? "user" : "model",
       parts: [{ text: m.content }],
     })),
