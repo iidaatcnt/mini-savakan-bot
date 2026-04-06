@@ -338,7 +338,7 @@ export default function Home() {
               </button>
             </div>
             <p className="text-center text-[10px] text-slate-400 mt-4 uppercase tracking-[0.2em] font-medium">
-              Mini-Savakan-Bot supported by Gemini 1.5 Flash
+              Walter AI supported by Gemini 1.5 Flash
             </p>
           </form>
         </div>
