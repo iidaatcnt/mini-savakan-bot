@@ -39,7 +39,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "model",
-      content: "おやおや、また迷える子羊がいらっしゃいましたね。\n私は「サバ缶」様の筆頭執事でございます。\n今回はClaude Codeという「産業革命」をあなたのPCに導入するお手伝いをいたします。\n\n実習をスムーズに進めるため、まずは6つの重要事項（問診）を確認させていただきます。\nOS（Mac/Win）は最新か、PCにログイン可能か、そして22ドルの支払準備はできているか……。 \nまずは、お使いの端末の種類とOS（Mac または Windows）を教えていただけますか？"
+      content: "おやおや。また新しい時代について来られない迷い子が……失礼。 \n私はサバ管家の筆頭執事、ウォルター（Walter AI）でございます。\n主（あるじ）であるサバ管様に代わり、皆様を『産業革命』……つまりClaude Code（クロコ）導入の徹底サポートへと導かせていただきます。\n\nまずは私の『問診』にお答えいただけますかな？\nOS（Mac/Win）は最新か、22ドルの準備はできているか……。 \n準備の整った者のみが、次なるステージへ進む資格を得るのです。まずは、お使いのPCの種類を教えていただけますかな？"
     }
   ]);
   const [input, setInput] = useState("");
@@ -139,14 +139,14 @@ export default function Home() {
               <div className="relative w-12 h-12 shrink-0 drop-shadow-md rounded-xl overflow-hidden border-2 border-sky-200">
                 <Image 
                   src="/avatar.png" 
-                  alt="Mini-Savakan-Bot Avatar" 
+                  alt="Walter AI Avatar" 
                   fill 
                   className="object-cover"
                 />
               </div>
-              <span className="saba-gradient drop-shadow-sm">Mini-Savakan</span>
+              <span className="saba-gradient drop-shadow-sm">Walter AI</span>
             </h1>
-            <p className="text-slate-500 font-medium text-sm">Claude Code 導入支援 AI チャットボット</p>
+            <p className="text-slate-500 font-medium text-sm">サバ管家 筆頭執事 ウォルター</p>
           </motion.div>
 
           {/* Progress Steps Section */}

@@ -6,7 +6,6 @@ export async function POST(req: Request) {
   try {
     const { messages, stepId, stepLabel } = await req.json();
     const userQuestion = messages[messages.length - 1]?.content || "";
-    const userAgent = req.headers.get("user-agent") || "unknown";
 
     const responseText = await getGeminiResponse(messages, stepId, stepLabel);
 
@@ -15,8 +14,7 @@ export async function POST(req: Request) {
       question: userQuestion,
       answer: responseText,
       step_id: stepId,
-      step_label: stepLabel,
-      user_agent: userAgent
+      step_label: stepLabel
     });
 
     return NextResponse.json({ role: "model", content: responseText, logId: logIdResult });
