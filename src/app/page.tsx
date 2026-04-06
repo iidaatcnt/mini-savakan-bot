@@ -17,6 +17,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { FAQ_DATA, FAQItem } from "@/data/faq";
+import Image from "next/image";
 
 type Message = {
   role: "user" | "model";
@@ -102,7 +103,14 @@ export default function Home() {
             className="shrink-0 mb-6"
           >
             <h1 className="text-3xl lg:text-4xl font-black mb-2 flex items-center gap-3">
-              <span className="text-4xl drop-shadow-sm">🥫</span>
+              <div className="relative w-12 h-12 shrink-0 drop-shadow-md rounded-xl overflow-hidden border-2 border-sky-200">
+                <Image 
+                  src="/avatar.png" 
+                  alt="Mini-Savakan-Bot Avatar" 
+                  fill 
+                  className="object-cover"
+                />
+              </div>
               <span className="saba-gradient drop-shadow-sm">Mini-Savakan</span>
             </h1>
             <p className="text-slate-500 font-medium text-sm">Claude Code 導入支援 AI チャットボット</p>
