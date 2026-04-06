@@ -1,10 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
-  console.warn("NEXT_PUBLIC_GEMINI_API_KEY is not set");
+if (!process.env.GEMINI_API_KEY) {
+  console.warn("GEMINI_API_KEY is not set");
 }
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export const getGeminiResponse = async (
   messages: { role: string; content: string }[],
