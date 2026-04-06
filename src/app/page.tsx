@@ -35,7 +35,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "model",
-      content: "こんにちは！「Mini-Savakan-Bot（ミニ・サバ缶・ボット）」です。\nサバ管の知恵を絞って、あなたの PC に Claude Code をパカッとインストールするお手伝いをします。\nまずは、お使いの OS（Windows, Mac, Linux）を教えてください！"
+      content: "おやおや、また迷える子羊がいらっしゃいましたね。\n私は「サバ缶」様の筆頭執事でございます。\n今回はClaude Codeという「産業革命」をあなたのPCに導入するお手伝いをいたします。\nまずは、お使いのOS（Windows, Mac, Linux）をお教えいただけますか？"
     }
   ]);
   const [input, setInput] = useState("");
