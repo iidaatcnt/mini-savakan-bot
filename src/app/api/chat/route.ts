@@ -9,15 +9,15 @@ export async function POST(req: Request) {
 
     const responseText = await getGeminiResponse(messages, stepId, stepLabel);
 
-    // バックグラウンドでログを保存 (非同期で待ちすぎない)
-    logChatMessage({
+    // ログを保存しIDを取得 (同期的に待つ)
+    const logIdResult = await logChatMessage({
       question: userQuestion,
       answer: responseText,
       step_id: stepId,
       step_label: stepLabel
-    }).catch(err => console.error("Non-blocking log error:", err));
+    });
 
-    return NextResponse.json({ role: "model", content: responseText });
+    return NextResponse.json({ role: "model", content: responseText, logId: logIdResult });
 
   } catch (error: any) {
     console.error("Gemini API Error:", error);

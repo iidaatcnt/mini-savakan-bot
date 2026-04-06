@@ -23,6 +23,8 @@ import Image from "next/image";
 type Message = {
   role: "user" | "model";
   content: string;
+  logId?: string | null;
+  satisfied?: boolean | null;
 };
 
 const STEPS = [
@@ -81,14 +83,18 @@ export default function Home() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          messages: [...messages, userMessage],
+          messages: messages.map(m => ({ role: m.role, content: m.content })).concat(userMessage),
           stepId: stepObj.id,
           stepLabel: stepObj.label
         }),
       });
       const data = await res.json();
       if (res.ok && data.content) {
-        setMessages(prev => [...prev, { role: "model", content: data.content }]);
+        setMessages(prev => [...prev, { 
+          role: "model", 
+          content: data.content, 
+          logId: data.logId 
+        }]);
       } else {
         throw new Error(data.error || "通信エラーが発生しました。");
       }
@@ -97,6 +103,24 @@ export default function Home() {
       setMessages(prev => [...prev, { role: "model", content: `エラーが発生しました: ${error.message}` }]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSatisfaction = async (msgIdx: number, satisfied: boolean) => {
+    const msg = messages[msgIdx];
+    if (!msg.logId) return;
+
+    // Update local state first
+    setMessages(prev => prev.map((m, i) => i === msgIdx ? { ...m, satisfied } : m));
+
+    try {
+      await fetch("/api/satisfaction", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ logId: msg.logId, satisfied }),
+      });
+    } catch (error) {
+      console.error("Satisfaction update failed:", error);
     }
   };
 
@@ -244,13 +268,42 @@ export default function Home() {
                     }`}>
                       {m.role === "user" ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
                     </div>
-                    <div className={`p-4 rounded-3xl shadow-sm ${
-                      m.role === "user" 
-                        ? "bg-sky-500 text-white rounded-tr-none" 
-                        : "bg-white text-slate-700 rounded-tl-none border border-slate-100"
-                    }`}>
-                      <p className="whitespace-pre-wrap leading-relaxed text-sm md:text-base font-medium">{m.content}</p>
-                    </div>
+                     <div className={`p-4 rounded-3xl shadow-sm ${
+                       m.role === "user" 
+                         ? "bg-sky-500 text-white rounded-tr-none" 
+                         : "bg-white text-slate-700 rounded-tl-none border border-slate-100"
+                     }`}>
+                       <p className="whitespace-pre-wrap leading-relaxed text-sm md:text-base font-medium">{m.content}</p>
+
+                       {m.role === "model" && m.logId && (
+                         <div className="mt-4 pt-4 border-t border-slate-100">
+                           {m.satisfied === undefined || m.satisfied === null ? (
+                             <div className="space-y-3">
+                               <p className="text-xs text-slate-500 font-bold">質問は解決しましたか？（任意）</p>
+                               <div className="flex gap-2">
+                                 <button 
+                                   onClick={() => handleSatisfaction(idx, true)}
+                                   className="flex-1 py-2 rounded-xl border border-sky-200 text-sky-600 text-sm font-bold hover:bg-sky-50 transition-colors"
+                                 >
+                                   はい
+                                 </button>
+                                 <button 
+                                   onClick={() => handleSatisfaction(idx, false)}
+                                   className="flex-1 py-2 rounded-xl border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50 transition-colors"
+                                 >
+                                   いいえ
+                                 </button>
+                               </div>
+                             </div>
+                           ) : (
+                             <p className="text-xs font-bold text-sky-600 flex items-center gap-1">
+                               <CheckCircle2 className="w-3.5 h-3.5" />
+                               フィードバックありがとうございます
+                             </p>
+                           )}
+                         </div>
+                       )}
+                     </div>
                   </div>
                 </motion.div>
               ))}

@@ -11,16 +11,31 @@ export async function logChatMessage(chatData: {
   step_id?: string;
   step_label?: string;
 }) {
-  if (!supabaseUrl || !supabaseAnonKey) return;
+  if (!supabaseUrl || !supabaseAnonKey) return null;
 
-  const { error } = await supabase.from("chat_logs").insert([
+  const { data, error } = await supabase.from("chat_logs").insert([
     {
       ...chatData,
       created_at: new Date().toISOString(),
     },
-  ]);
+  ]).select("id").single();
 
   if (error) {
     console.error("Supabase Log Error:", error);
+    return null;
+  }
+  return data?.id;
+}
+
+export async function updateSatisfaction(logId: string, satisfied: boolean) {
+  if (!supabaseUrl || !supabaseAnonKey) return;
+
+  const { error } = await supabase
+    .from("chat_logs")
+    .update({ satisfied })
+    .eq("id", logId);
+
+  if (error) {
+    console.error("Supabase Satisfaction Update Error:", error);
   }
 }
