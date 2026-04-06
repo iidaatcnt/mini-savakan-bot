@@ -7,33 +7,51 @@ export type FAQItem = {
 
 export const FAQ_DATA: FAQItem[] = [
   {
-    id: "nodejs",
-    question: "Node.js のバージョンはいくつが必要ですか？",
-    answer: "Claude Code を動かすには Node.js 18 以上の LTS バージョンが推奨されています。ターミナルで `node -v` と打って確認してみましょう！",
-    keywords: ["node", "version", "バージョン", "18"]
+    id: "git",
+    question: "Gitのインストールを要求されて怖いのですが…？",
+    answer: "非プログラマーの人はそれが普通です。クロコでのプロジェクト作成や変更履歴の管理に必要なものなので、指示に従ってインストールしてください。インストールしても大丈夫なやつです！",
+    keywords: ["git", "インストール", "怖い", "要求"]
   },
   {
-    id: "eacces",
-    question: "npm install で権限エラー（EACCES）が出たら？",
-    answer: "Mac/Linuxの場合、`sudo` をつけて実行するか、`nvm` などのバージョン管理ツールを使ってインストールするのが『サバ管』おすすめの安全な方法です。",
-    keywords: ["error", "eacces", "権限", "sudo", "エラー", "npm"]
+    id: "no_cowork",
+    question: "デスクトップ版なのに「チャット｜Cowork｜コード」のタブがありません",
+    answer: "インストールはできていますが、無料ユーザーの時にこの事象がおきます。1ヶ月でいいのでProプラン（月額22ドル）に申し込むだけで解決します。",
+    keywords: ["cowork", "コード", "表示されない", "無料", "pro", "プラン"]
   },
   {
-    id: "path",
-    question: "claude コマンドが見つかりません",
-    answer: "インストール直後は一度ターミナルを再起動するか、`.zshrc` や `.bashrc` に npm の global パスが通っているか確認が必要です。「コマンドが見つからない」は PATH の問題がほとんどです。",
-    keywords: ["path", "command not found", "見つからない", "コマンド"]
+    id: "check_install",
+    question: "ちゃんとインストールできているのか分かりません",
+    answer: "「私のデスクトップにあるファイルの一覧を作成してください。」と打ってみてください。操作方法を教えてくるだけならチャット、実際にファイル一覧を作ってくれればエージェント型のAI（クロコ）として動いています！",
+    keywords: ["確認", "インストール", "わからない", "テスト"]
   },
   {
-    id: "api",
-    question: "APIキーはどこで取得できますか？",
-    answer: "Anthropic Console (https://console.anthropic.com/) にログインし、API Keys メニューから作成できます。使い始めるには少額のチャージ（クレジット追加）が必要です。",
-    keywords: ["api", "key", "キー", "取得", "console", "料金"]
+    id: "os_update",
+    question: "インストールしようとするとパソコンのアップデートを要求されます",
+    answer: "しばらくアップデートしていなかったのが原因です。電源を繋いで、パソコンのアップデートをしてから再トライしてください！（Windowsの人に多い印象です）",
+    keywords: ["アップデート", "要求", "windows", "os", "更新"]
   },
   {
-    id: "windows",
-    question: "Windows でも動きますか？",
-    answer: "はい！WSL2（Windows Subsystem for Linux）上で動かすのが一番安定していておすすめです。PowerShell でも動作しますが、一部のツール連携が制限される場合があります。",
-    keywords: ["windows", "wsl", "powershell", "ウィンドウズ", "win"]
+    id: "cli_wrong",
+    question: "間違えてCLI版（黒い画面）をインストールしてしまったかも…",
+    answer: "ネットにはCLI版の情報が多いのでよくあります。CLI版はそのまま放置して、改めてアプリ版（白い画面のやつ）をインストールすれば大丈夫です。",
+    keywords: ["cli", "間違えた", "黒い画面", "放置"]
+  },
+  {
+    id: "close_mac",
+    question: "処理の途中でパソコンを閉じたらどうなりますか？",
+    answer: "基本的には再開時にプロンプトを再送信することになります。大きな仕事をさせる時は進捗をファイル（例: progress.md）に残し、再開時に読み込ませると無駄が減らせます。",
+    keywords: ["閉じる", "途中で", "スリープ", "再開", "中断"]
+  },
+  {
+    id: "token_limit",
+    question: "トークンが限界になったら？ 途中で制限がかかったら？",
+    answer: "制限が解除されるまで次の依頼はできません。途中で制限にかかった場合、再開時に指示が再送信され、続きからではなく最初からやり直すことになるみたいです。",
+    keywords: ["トークン", "限界", "制限", "やり直し"]
+  },
+  {
+    id: "smartphone",
+    question: "スマホ版の広告がウザいです。スマホで使ってもトークンは減る？",
+    answer: "まず、スマホ版のClaude codeアプリはありません（ニセモノかも？）。パソコンで作業してください！また、スマホのブラウザ等で普通のClaudeを使った分も同じアカウントなのでトークンは減ります。",
+    keywords: ["スマホ", "広告", "偽物", "トークン", "減る"]
   }
 ];
