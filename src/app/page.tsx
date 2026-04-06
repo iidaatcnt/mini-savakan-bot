@@ -74,10 +74,15 @@ export default function Home() {
     setIsLoading(true);
 
     try {
+      const stepObj = STEPS[currentStep];
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [...messages, userMessage] }),
+        body: JSON.stringify({ 
+          messages: [...messages, userMessage],
+          stepId: stepObj.id,
+          stepLabel: stepObj.label
+        }),
       });
       const data = await res.json();
       if (data.content) {
@@ -121,10 +126,11 @@ export default function Home() {
             {STEPS.map((step, idx) => (
               <motion.div 
                 key={step.id}
+                onClick={() => setCurrentStep(idx)}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className={`flex items-center gap-4 p-3 rounded-2xl transition-all ${
+                className={`flex items-center gap-4 p-3 rounded-2xl transition-all cursor-pointer hover:bg-slate-100 ${
                   idx === currentStep ? "glass ring-1 ring-sky-500/50 bg-sky-50" : "opacity-60 bg-transparent"
                 }`}
               >
@@ -133,7 +139,7 @@ export default function Home() {
                 }`}>
                   {idx < currentStep ? <CheckCircle2 className="w-5 h-5 text-white" /> : <step.icon className="w-4 h-4" />}
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className={`font-bold text-sm ${idx === currentStep ? "text-sky-600" : "text-slate-500"}`}>
                     Step {idx + 1}: {step.label}
                   </p>

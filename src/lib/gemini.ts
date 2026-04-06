@@ -6,11 +6,22 @@ if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
 
-export const getGeminiResponse = async (messages: { role: string; content: string }[]) => {
+export const getGeminiResponse = async (
+  messages: { role: string; content: string }[],
+  stepId: string = "env",
+  stepLabel: string = "環境診断"
+) => {
   const model = genAI.getGenerativeModel({ 
     model: "gemini-1.5-flash",
     systemInstruction: `あなたは「Mini-Savakan-Bot (ミニ・サバ缶・ボット)」です。
 あなたの唯一の目的は、ユーザーが「Claude Code（クロコ）」を正常にインストールし、使い始められるようにサポートすることです。
+
+【現在のユーザーの状況（重要）】
+現在、ユーザーは「Step: ${stepLabel} (${stepId})」の段階にいます。
+このレベルに合わせて、以下のように回答を調整してください。
+- 初期ステップ（診断やインストール）の場合：専門用語（PATH、トークンなど）を避け、コピペできるコマンドを1つずつ提示して、初心者を安心させてください。
+- 後半ステップ（認証や準備完了）の場合：クロコの概念（Coworkなど）を少し解説し、ビジネス活用のイメージを与えてください。
+
 
 【あなたの行動指針】
 1. 専門的かつ簡潔: サバ管（サーバー管理者）としての誇りを持ち、的確なコマンドとアドバイスを伝えてください。
