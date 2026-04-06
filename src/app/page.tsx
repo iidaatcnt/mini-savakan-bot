@@ -88,11 +88,11 @@ export default function Home() {
       if (res.ok && data.content) {
         setMessages(prev => [...prev, { role: "model", content: data.content }]);
       } else {
-        throw new Error(data.error || "API Error");
+        throw new Error(data.error || "通信エラーが発生しました。");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error:", error);
-      setMessages(prev => [...prev, { role: "model", content: "すみません、通信エラーが発生しました。もう一度お試しください。" }]);
+      setMessages(prev => [...prev, { role: "model", content: `エラーが発生しました: ${error.message}` }]);
     } finally {
       setIsLoading(false);
     }
