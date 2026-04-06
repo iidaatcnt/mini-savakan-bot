@@ -25,10 +25,10 @@ type Message = {
 };
 
 const STEPS = [
-  { id: "env", label: "環境診断", icon: Terminal },
+  { id: "env", label: "環境診断 (問診)", icon: Terminal },
   { id: "install", label: "インストール", icon: Package },
-  { id: "auth", label: "認証設定", icon: Key },
-  { id: "ready", label: "準備完了", icon: ShieldCheck },
+  { id: "auth", label: "認証・Proプラン", icon: Key },
+  { id: "ready", label: "疎通確認 (Cowork)", icon: ShieldCheck },
 ];
 
 export default function Home() {
