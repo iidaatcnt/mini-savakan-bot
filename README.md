@@ -40,5 +40,11 @@ npm run dev
 ## 🥫 サバ管（SysAdmin）からのメッセージ
 「インストールで迷ったら、まずは缶詰の蓋を開ける心意気で `node -v` を打ちましょう。鮮度の高い環境が、最高の Claude Code 体験を約束します。」
 
+## 📚 ドキュメント構成
+本プロジェクトの全体像や進捗については、以下のファイルをご参照ください。
+- [`README.md`](./README.md): プロジェクトの概要とセットアップ手法
+- [`SPEC.md`](./SPEC.md): アプリケーションの全体仕様（ペルソナ設定・技術構成など）
+- [`progress.md`](./progress.md): 開発の進行状況と Todo リスト
+
 ---
 Powered by **Mini-Savakan AI Architecture**.
