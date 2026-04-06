@@ -14,7 +14,8 @@ import {
   Package,
   Key,
   ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  Sparkles
 } from "lucide-react";
 import { FAQ_DATA, FAQItem } from "@/data/faq";
 import Image from "next/image";
@@ -28,7 +29,8 @@ const STEPS = [
   { id: "env", label: "環境診断 (問診)", icon: Terminal },
   { id: "install", label: "インストール", icon: Package },
   { id: "auth", label: "認証・Proプラン", icon: Key },
-  { id: "ready", label: "疎通確認 (Cowork)", icon: ShieldCheck },
+  { id: "ready", label: "動作確認 (Read/Write)", icon: ShieldCheck },
+  { id: "extend", label: "活用と拡張", icon: Sparkles },
 ];
 
 export default function Home() {
