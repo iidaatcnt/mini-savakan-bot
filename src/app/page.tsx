@@ -15,7 +15,10 @@ import {
   Key,
   ShieldCheck,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  Plus,
+  X,
+  Image as ImageIcon
 } from "lucide-react";
 import { FAQ_DATA, FAQItem } from "@/data/faq";
 import Image from "next/image";
@@ -23,6 +26,7 @@ import Image from "next/image";
 type Message = {
   role: "user" | "model";
   content: string;
+  image?: string | null;
   logId?: string | null;
   satisfied?: boolean | null;
 };
@@ -45,7 +49,9 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // FAQ State
   const [searchQuery, setSearchQuery] = useState("");
@@ -70,11 +76,20 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if ((!input.trim() && !selectedImage) || isLoading) return;
 
-    const userMessage = { role: "user" as const, content: input };
+    const userMessage: Message = { 
+      role: "user", 
+      content: input,
+      image: selectedImage 
+    };
     setMessages(prev => [...prev, userMessage]);
+    
+    // Clear inputs immediately for better UX
+    const currentInput = input;
+    const currentImage = selectedImage;
     setInput("");
+    setSelectedImage(null);
     setIsLoading(true);
 
     try {
@@ -83,9 +98,18 @@ export default function Home() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          messages: messages.map(m => ({ role: m.role, content: m.content })).concat(userMessage),
+          messages: messages.map(m => ({ 
+            role: m.role, 
+            content: m.content,
+            image: m.image ?? null
+          })).concat([{
+            role: userMessage.role,
+            content: userMessage.content,
+            image: userMessage.image ?? null
+          }]),
           stepId: stepObj.id,
-          stepLabel: stepObj.label
+          stepLabel: stepObj.label,
+          image: currentImage // Pass the image separately for easier handling if needed
         }),
       });
       const data = await res.json();
@@ -122,6 +146,35 @@ export default function Home() {
     } catch (error) {
       console.error("Satisfaction update failed:", error);
     }
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (max 4.0 MB)
+    if (file.size > 4 * 1024 * 1024) {
+      alert("申し訳ございません。ファイルサイズは 4MB 以下に抑えていただけますかな？（大きすぎると私の魔力が足りなくなってしまいます）");
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      alert("画像ファイルのみを受け付けております。よろしいですかな？");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setSelectedImage(event.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+    
+    // Reset input value so same file can be selected again
+    e.target.value = "";
+  };
+
+  const removeImage = () => {
+    setSelectedImage(null);
   };
 
   return (
@@ -273,7 +326,17 @@ export default function Home() {
                          ? "bg-sky-500 text-white rounded-tr-none" 
                          : "bg-white text-slate-700 rounded-tl-none border border-slate-100"
                      }`}>
-                       <p className="whitespace-pre-wrap leading-relaxed text-sm md:text-base font-medium">{m.content}</p>
+                      {m.image && (
+                        <div className="mb-3 relative group">
+                          <img 
+                            src={m.image} 
+                            alt="添付画像" 
+                            className="max-w-full rounded-2xl border border-slate-200 shadow-sm transition-transform hover:scale-[1.02] cursor-zoom-in"
+                            onClick={() => window.open(m.image!, "_blank")}
+                          />
+                        </div>
+                      )}
+                      <p className="whitespace-pre-wrap leading-relaxed text-sm md:text-base font-medium">{m.content}</p>
 
                        {m.role === "model" && m.logId && (
                          <div className="mt-4 pt-4 border-t border-slate-100">
@@ -322,20 +385,58 @@ export default function Home() {
 
           {/* Input Area */}
           <form onSubmit={handleSubmit} className="p-4 md:p-6 bg-white border-t border-slate-100 shrink-0">
-            <div className="relative group shadow-sm rounded-2xl">
+            {selectedImage && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 relative inline-block group"
+              >
+                <img 
+                  src={selectedImage} 
+                  alt="Preview" 
+                  className="h-24 w-auto rounded-xl border-2 border-sky-400 shadow-md"
+                />
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute -top-2 -right-2 p-1 bg-rose-500 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </motion.div>
+            )}
+            <div className="flex gap-2">
               <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="メッセージを入力、またはエラー文をコピペ..."
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-6 pr-14 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-all placeholder:text-slate-400 text-slate-700 font-medium"
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageSelect}
+                accept="image/*"
+                className="hidden"
               />
               <button
-                type="submit"
-                disabled={isLoading}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center text-white hover:bg-sky-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed group-focus-within:scale-105 shadow-sm"
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
+                  selectedImage ? "bg-sky-50 text-sky-500 ring-2 ring-sky-500/30" : "bg-slate-50 text-slate-400 hover:bg-slate-100 border border-slate-200"
+                }`}
               >
-                <Send className="w-5 h-5" />
+                <Plus className="w-6 h-6" />
               </button>
+              <div className="relative flex-1 group shadow-sm rounded-2xl">
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="メッセージを入力、またはエラー文をコピペ..."
+                  className="w-full h-14 bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-6 pr-14 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-all placeholder:text-slate-400 text-slate-700 font-medium"
+                />
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center text-white hover:bg-sky-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed group-focus-within:scale-105 shadow-sm"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </div>
             </div>
             <p className="text-center text-[10px] text-slate-400 mt-4 uppercase tracking-[0.2em] font-medium">
               Walter AI supported by Gemini 1.5 Flash

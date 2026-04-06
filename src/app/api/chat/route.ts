@@ -4,10 +4,10 @@ import { logChatMessage } from "@/lib/supabase";
 
 export async function POST(req: Request) {
   try {
-    const { messages, stepId, stepLabel } = await req.json();
+    const { messages, stepId, stepLabel, image } = await req.json();
     const userQuestion = messages[messages.length - 1]?.content || "";
 
-    const responseText = await getGeminiResponse(messages, stepId, stepLabel);
+    const responseText = await getGeminiResponse(messages, stepId, stepLabel, image);
 
     // ログを保存しIDを取得 (同期的に待つ)
     const logIdResult = await logChatMessage({
