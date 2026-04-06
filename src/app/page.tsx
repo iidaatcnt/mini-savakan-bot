@@ -3,13 +3,18 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
+  Terminal, 
   Send, 
   Bot, 
   User, 
   Search,
   BookOpen,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Package,
+  Key,
+  ShieldCheck,
+  CheckCircle2
 } from "lucide-react";
 import { FAQ_DATA, FAQItem } from "@/data/faq";
 
@@ -17,6 +22,13 @@ type Message = {
   role: "user" | "model";
   content: string;
 };
+
+const STEPS = [
+  { id: "env", label: "環境診断", icon: Terminal },
+  { id: "install", label: "インストール", icon: Package },
+  { id: "auth", label: "認証設定", icon: Key },
+  { id: "ready", label: "準備完了", icon: ShieldCheck },
+];
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
@@ -27,6 +39,7 @@ export default function Home() {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // FAQ State
@@ -81,7 +94,7 @@ export default function Home() {
     <main className="min-h-screen bg-slate-50 text-slate-800 p-4 md:p-8 font-sans selection:bg-sky-200">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 h-[calc(100vh-4rem)]">
         
-        {/* Left Column: Branding & FAQ */}
+        {/* Left Column: Branding, Progress & FAQ */}
         <div className="lg:col-span-4 flex flex-col h-full overflow-hidden pb-4">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
@@ -94,6 +107,32 @@ export default function Home() {
             </h1>
             <p className="text-slate-500 font-medium text-sm">Claude Code 導入支援 AI チャットボット</p>
           </motion.div>
+
+          {/* Progress Steps Section */}
+          <div className="space-y-3 mb-6 shrink-0">
+            {STEPS.map((step, idx) => (
+              <motion.div 
+                key={step.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                className={`flex items-center gap-4 p-3 rounded-2xl transition-all ${
+                  idx === currentStep ? "glass ring-1 ring-sky-500/50 bg-sky-50" : "opacity-60 bg-transparent"
+                }`}
+              >
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                  idx <= currentStep ? "bg-sky-500 text-white shadow-md shadow-sky-500/20" : "bg-slate-200 text-slate-400"
+                }`}>
+                  {idx < currentStep ? <CheckCircle2 className="w-5 h-5 text-white" /> : <step.icon className="w-4 h-4" />}
+                </div>
+                <div>
+                  <p className={`font-bold text-sm ${idx === currentStep ? "text-sky-600" : "text-slate-500"}`}>
+                    Step {idx + 1}: {step.label}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
 
           {/* FAQ Section */}
           <div className="flex-1 flex flex-col glass rounded-3xl border border-slate-200/60 overflow-hidden shadow-sm bg-white/50">
